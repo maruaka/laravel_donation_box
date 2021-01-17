@@ -21,9 +21,11 @@
               @foreach ($blogs as $blog)
               <tr class="hover:bg-grey-lighter">
                 <td class="py-4 px-6 border-b border-grey-light">
-                  <a href="{{ route('blog.show',$blog->id)}}">{{$blog->point}}</a>
+            
+                  <a href="{{ route('blog.show',$blog->id)}}">{{$blog->points}}</a>
+              
                 </td>
-                <td class="py-4 px-6 border-b border-grey-light">{{$blog->text}}</td>
+                <td class="py-4 px-6 border-b border-grey-light">{{$blog->title}}</td>
                  <td class="py-4 px-6 border-b border-grey-light"><img src="{{ Storage::url($blog->file_path)}}" class="d-block rounded-circle mb-3"/></td>
                    
                    

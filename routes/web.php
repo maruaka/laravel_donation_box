@@ -21,9 +21,11 @@ Route::get('/', function () {
 Route::resource('blog', BlogController::class);
 
 
-
 Route::get('/donation/donate/{id}', [DonationController::class, 'create'])->name('donation');
-Route::resource('donation', DonationController::class); 
+Route::get('/donation/thx/', [DonationController::class, 'show']);
+Route::resource('donation', DonationController::class);
+
+// Route::get('/donation/show/{id}', [DonationController::class, 'show']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
