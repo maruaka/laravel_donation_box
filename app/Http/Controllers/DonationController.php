@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Validator;
 use App\Models\Donation;
+use App\Models\Blog;
 
 class DonationController extends Controller
 {
@@ -16,7 +17,9 @@ class DonationController extends Controller
      */
     public function index()
     {
-        //  45
+       
+           
+         return view('donation.thx');
     }
 
     /**
@@ -41,9 +44,36 @@ class DonationController extends Controller
      */
     public function store(Request $request)
     {
-       ddd($request);
-        //  return view('donation.donate');
-        //  ,['blog_id'=>$blog_id]);
+    //   ddd($request);
+    // ddd($request->blog_id)
+    //  ddd($request->donation);
+    
+          // バリデーション
+    $validator = Validator::make($request->all(), [
+        'name' => 'required',
+        'email' => 'required',
+        'donation' => 'required'
+    ]);
+    // バリデーション:エラー
+    if ($validator->fails()) {
+        return redirect()
+        ->route('donation.create')
+        ->withInput()
+        ->withErrors($validator);
+        }
+        
+        
+        $donation = Donation::create([
+            'blog_id'=>$request['blog_id'],
+            'name'=>$request['name'],
+            'email'=>$request['email'],
+            'point'=>$request['donation']
+            
+        ]);
+        
+        return redirect()->route('donation.index');
+        
+       
     }
 
     /**
@@ -54,7 +84,7 @@ class DonationController extends Controller
      */
     public function show($id)
     {
-        //
+        // $donation = Donation::find($id);
     }
 
     /**

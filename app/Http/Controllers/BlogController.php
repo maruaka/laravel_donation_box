@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Auth;
 use Validator;
 use App\Models\Blog;
+use App\Models\Donation;
+use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller
 {
@@ -17,8 +19,28 @@ class BlogController extends Controller
      */
     public function index()
     {
-         $blogs = Blog::orderBy('created_at', 'desc')->get(); 
+        
+        //  $points = Donation::selectRaw('sum(point) as blog_id')
+        //           ->groupByRaw('blog_id')
+        //           ->get();
+        
+            $points = DB::table('donations')
+                     ->select('blog_id',DB::raw('SUM(point) as points'))
+                     ->groupBy('blog_id');
+                    //  ->get();
+        //  ddd($points);
+        //  
+        //  $points = Donation::where('blog_id','24')->sum('point');
+        
+         $blogs = DB::table('blogs')
+                    ->leftJoinSub($points,'points',function($join){
+                        $join->on('blogs.id','=','points.blog_id')
+                        ->orderBy('blogs.created_at','desc');
+                    })->get(); 
+                    // ->get();
+        // $blogs = DB::table('blogs')->get();
         //  ddd($blogs);
+         
         return view('blog.index',[
             'blogs'=> $blogs
             ]);
@@ -93,8 +115,9 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        $blog = Blog::find($id);
         
+        $blog = Blog::find($id);
+        // $point = $blog->select('', 'email as user_email')->get();
         return view('blog.show',['blog'=>$blog]);
         
     }
